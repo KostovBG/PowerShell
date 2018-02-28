@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helpItems xmlns="http://msh" schema="maml">
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10">
+    <command:details>
+      <command:name>
+        Invoke-ParallelProcessing
+      </command:name>
+      <command:verb>
+        Invoke
+      </command:verb>
+      <command:noun>
+        ParallelProcessing
+      </command:noun>
+    </command:details>
+    <maml:description>
+      <maml:para>
+        Invokes one or more scriptblocks in parallel. A list of arguments can be provided to the scriptblocks in one of three modes. See 'Parameters' for details.
+      </maml:para>
+    </maml:description>
+    <command:syntax>    
+      <command:syntaxItem>
+
+        <maml:name>Invoke-ParallelProcessing</maml:name>
+        
+        <command:parameter required="true" globbing="false" pipelineInput="false" position="0">
+          <maml:name>ScriptBlock</maml:name>
+          <command:parameterValue required="true">ScriptBlock[]</command:parameterValue>
+        </command:parameter>
+
+        <command:parameter required="true" globbing="false" pipelineInput="false" position="1">
+          <maml:name>ArgumentList</maml:name>
+          <command:parameterValue required="true">Object[]</command:parameterValue>
+        </command:parameter>
+
+        <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>MaxThreads</maml:name>
+          <command:parameterValue required="true">Int32</command:parameterValue>
+        </command:parameter>
+
+        <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>UseLocalScope</maml:name>
+        </command:parameter>
+
+        <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>InvocationMode</maml:name>
+          <command:parameterValue required="true">ParallelExecutionHelper.InvocationMode</command:parameterValue>
+        </command:parameter>
+
+        <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+          <maml:name>MaxExecutionTime</maml:name>
+          <command:parameterValue required="false">TimeSpan</command:parameterValue>
+        </command:parameter>
+
+      </command:syntaxItem>
+    </command:syntax>
+    
+    <command:parameters>
+
+      <command:parameter required="true" globbing="false" pipelineInput="false" position="0">
+        <maml:name>ScriptBlock</maml:name>
+        <maml:description>
+          <maml:para>Specifies the list of scripts that should be executed in parallel.</maml:para>
+        </maml:description>
+        <dev:type>ScriptBlock[]</dev:type>
+        <dev:defaultvalue>(none)</dev:defaultvalue>
+        <command:parameterValue required="true">ScriptBlock[]</command:parameterValue>
+      </command:parameter>
+
+      <command:parameter required="true" globbing="false" pipelineInput="false" position="1">
+        <maml:name>ArgumentList</maml:name>
+        <maml:description>
+          <maml:para>Specifies the list of arguments that will be available to the scripts.</maml:para>
+          <maml:para>Note: Different arguments will be available to each script depending on the InvocationMode parameter.</maml:para>
+        </maml:description>
+        <dev:type>Object[]</dev:type>
+        <dev:defaultvalue>(none)</dev:defaultvalue>
+        <command:parameterValue required="true">Object[]</command:parameterValue>
+      </command:parameter>
+
+      <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>MaxThreads</maml:name>
+        <maml:description>
+          <maml:para>The maximum number of parallel threads that will be active at any given time.</maml:para>
+          <maml:para>The number of threads must be between 1 and 64.</maml:para>
+          <maml:para>When configuring this setting make sure to account for the relative performance impact of each script and the machine hardware specifications.</maml:para>
+        </maml:description>
+        <dev:type>Int32</dev:type>
+        <dev:defaultvalue>4</dev:defaultvalue>
+        <command:parameterValue required="true">Int32</command:parameterValue>
+      </command:parameter>
+
+      <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>UseLocalScope</maml:name>
+        <maml:description>
+          <maml:para>Specifies whether the child runspaces will be executed in the parent's local scope.</maml:para>
+        </maml:description>
+        <dev:defaultvalue>false</dev:defaultvalue>
+      </command:parameter>
+
+      <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>InvocationMode</maml:name>
+        <maml:description>
+          <maml:para>Specifies how to pass the arguments from the ArgumentList parameter to the scripts from the ScriptBlock parameter.</maml:para>
+        </maml:description>
+        <dev:type>ParallelExecutionHelper.InvocationMode</dev:type>
+        <dev:defaultvalue>OneArgumentToEachScriptBlock</dev:defaultvalue>
+        <dev:possiblevalues>
+          <dev:possiblevalue>
+            <dev:value>OneArgumentToEachScriptBlock</dev:value>
+            <maml:description>
+              <maml:para>Each script will receive exactly one element from the ArgumentList array. Common usage: Execute a script against several computers - the ArgumentList will contain the list of computer names.</maml:para>
+            </maml:description>
+          </dev:possiblevalue>
+          <dev:possiblevalue>
+            <dev:value>AllArgumentsToEachScriptBlock</dev:value>
+            <maml:description>
+              <maml:para>Each script will receive all elements from the ArgumentList array. Common usage: Execute several different scripts against a single computer - the ArgumentList can contain various configuration data.</maml:para>
+            </maml:description>
+          </dev:possiblevalue>
+          <dev:possiblevalue>
+            <dev:value>MatchScriptToArgumentByIndex</dev:value>
+            <maml:description>
+              <maml:para>Script ScriptBlock[0] will receive argument ArgumentList[0], Script ScriptBlock[1] will receive argument ArgumentList[1], etc. Common usage: Execute several unrelated tasks in parallel.</maml:para>
+            </maml:description>
+          </dev:possiblevalue>
+        </dev:possiblevalues>
+        <command:parameterValue required="true">ParallelExecutionHelper.InvocationMode</command:parameterValue>
+      </command:parameter>
+      
+      <command:parameter required="false" globbing="false" pipelineInput="false" position="named">
+        <maml:name>MaxExecutionTime</maml:name>
+        <maml:description>
+          <maml:para>The maximum time that the parent process will wait for the child processes to complete.</maml:para>
+          <maml:para>If a thread has not completed by the time the MaxExecutionTime has passed the job will be stopped and a timeout message will be logged in the Error property of the returned object.</maml:para>
+        </maml:description>
+        <dev:defaultvalue>Null (infinite)</dev:defaultvalue>
+        <command:parameterValue required="false">Nullable&lt;TimeSpan&gt;</command:parameterValue>
+      </command:parameter>
+
+
+    </command:parameters>
+
+  </command:command>
+</helpItems>
